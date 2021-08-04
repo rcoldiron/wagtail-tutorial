@@ -41,7 +41,9 @@ Initial Setup
 
 > NOTE: The current version at the time of the creation of this repo is Wagtail 2.14. You can select a version to download, like this `pip install wagtail==2.14`
 
-5. Create the first project: `wagtail start myproject` where `myproject` is the name of the website or project (this can be whatever you want). This generates the new project files from Wagtail. Please take a moment to look them over.
+5. Create the first project: `wagtail start myproject .` where `myproject` is the name of the website or project (this can be whatever you want) and the `.` tells it to create it in your current folder. This command generates the new project files from Wagtail. Please take a moment to look them over.
+
+> NOTE: Docker files are automatically generated with the project. While we will not be using them, we are keeping them in the repo in case you want to look them over and learn more about what they do. Docker can be used for deployment. [READ MORE](https://docs.wagtail.io/en/v2.14/reference/project_template.html#dockerfile)
 
 
 
