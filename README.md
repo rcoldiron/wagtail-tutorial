@@ -1,5 +1,5 @@
-AWiT Wagtail Tutorial
-=====================
+Wagtail Tutorial
+================
 
 This tutorial assumes some knowledge of Python, Django, and Git/GitHub (optional). If you have experience with none of these, consider following these tutorials beforehand and coming back to this one once you are ready:
 
