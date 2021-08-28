@@ -3,3 +3,18 @@ venv
 .venv
 env
 .env
+
+
+# Databases
+*.sqlite3
+
+# Django/Wagtail 
+media/
+
+# intentionally ignore migrations since this is a demo,
+# normally you would commit them to your repo.
+migrations/
+
+
+# Other
+__pycache__/
