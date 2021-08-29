@@ -49,5 +49,13 @@ Initial Setup
 
 > NOTE: Docker files are automatically generated with the project. While we will not be using them, we are keeping them in the repo in case you want to look them over and learn more about what they do. Docker can be used for deployment. [READ MORE](https://docs.wagtail.io/en/v2.14/reference/project_template.html#dockerfile)
 
+7. Navigate into the project: `cd myproject` and do the first migration with: `python manage.py migrate`. Next, create a login account for your project with the command `python manage.py createsuperuser` and follow the prompts. Check if it all worked by running `python manage.py runserver` and opening your browser to `http://127.0.0.1:8000/`.
+
+**Before moving onto the code section, get familiar with the CMS interface. Log into your site at `http://127.0.0.1:8000/admin` and read the [Wagtail documentation for Editors[(https://docs.wagtail.io/en/stable/editor_manual/index.html)].**
+
+
+Customizing Your Site - Part I
+------------------------------
+
 
 
