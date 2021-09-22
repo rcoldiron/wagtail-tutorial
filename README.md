@@ -91,10 +91,10 @@ from wagtail.admin.edit_handlers import FieldPanel
 class HomePage(Page):
 
     # An introduction to our site
-    intro_text = RichTextField(blank=True)
+    body = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
-        FieldPanel('intro_text'),
+        FieldPanel('body'),
     ]
 
 ```
