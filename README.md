@@ -248,4 +248,4 @@ You have just created a Wagtail website! CONGRATULATIONS! 🎉🎉🎉
 Next Steps
 ----------
 
-Add more pages, further customize your templates, and play around with the editor.**
+Add more pages, further customize your templates, and play around with the editor.
