@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}{% endblock extra_css %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% if page.cover_image %}
+        {% image page.cover_image fill-2000x1000 as cover_image %}
+        <div class="col-12 py-5 text-white text-center" style="background-image:url({{cover_image.url}});background-repeat:no-repeat;">
+            <div class="py-3">
+                <h2>{{page.title}}</h2>
+                <h3>{{page.subtitle}}</h3>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <div class="row my-3">
+        {% for block in page.body %}
+        <div class="col-12">
+            {% include_block block %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

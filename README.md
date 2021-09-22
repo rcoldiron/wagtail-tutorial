@@ -51,7 +51,7 @@ Initial Setup
 
 7. Navigate into the project: `cd myproject` and do the first migration with: `python manage.py migrate`. Next, create a login account for your project with the command `python manage.py createsuperuser` and follow the prompts. Check if it all worked by running `python manage.py runserver` and opening your browser to `http://127.0.0.1:8000/`.
 
-**Before moving onto the code section, get familiar with the CMS interface. Log into your site at `http://127.0.0.1:8000/admin` and read the [Wagtail documentation for Editors[(https://docs.wagtail.io/en/stable/editor_manual/index.html)].**
+**Before moving onto the code section, get familiar with the CMS interface. Log into your site at `http://127.0.0.1:8000/admin` and read the [Wagtail documentation for Editors](https://docs.wagtail.io/en/stable/editor_manual/index.html)].**
 
 
 Customizing Your Site - Part I
@@ -111,8 +111,141 @@ class HomePage(Page):
 
 10. We can add a CSS link specific to this page between these two tags: `{% block extra_css %} {% endblock extra_css %}`; however, the page extends `base.html`, which is actually found in `myproject` > `static` > `css`. The global CSS link should be added to `base.html`. For simplicity, we are just going to pull in the Bootstrap CDN but feel free to make your CSS in the `myproject,css` file. Add it under the `{# Global stylesheets #}` comment tag and save it.
 
-11. Now go back to `home_page.html`.
+11. Now go back to `home_page.html`. We will put our content within the tags `{% block content %} {% endblock content %}`. Our code will be:
+
+```
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}{% endblock extra_css %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center border-bottom border-success">
+            <h1>{{page.title}}</h1>
+        </div>
+        <div class="col my-4">
+            {{page.body|richtext}}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+```
+
+I've added some basic Bootstrap classes to style the page a little. We need to load `static` to pull in CSS and JS, and we need `wagtailcore_tags` for the special filtering we did for the `body` field. To include fields in your templates, you put them between curly braces and use dot notation: `{{page.body}}`. RichTextFields need a `richtext` filter to display correctly.
+
+12. Save these changes, then `python manage.py runserver` and edit the Home Page with some content to see it in action!
+
+> WHAT OTHER FIELDS CAN YOU ADD TO A PAGE? Well, you can add Django fields like `models.CharField` and Wagtail StreamField Blocks - check out the [StreamField reference](https://docs.wagtail.io/en/stable/reference/streamfield/index.html) to learn more!
 
 
+Customizing Your Site - Part II
+-------------------------------
+
+1. Now let's make our own page model and template!
+
+**I added some new imports at the top, so now my imports look like this:**
+
+```
+from wagtail.core.models import Page
+from wagtail.core import blocks
+from wagtail.core.fields import RichTextField, StreamField
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.images.blocks import ImageChooserBlock
+
+```
+
+2. Then I created my basic Web Page model. I added the template to `home` > `templates` > `home` and specified in my model which template I am going to use. Then I added the content fields that I wanted for my Web Page. This is my code:
 
 
+```
+class WebPage(Page):
+
+    cover_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    subtitle = models.CharField(
+        max_length = 255,
+        null = True,
+        blank = True,
+    )
+    body = StreamField([
+        ('text', blocks.RichTextBlock(null=True, blank=True)),
+        ('image', ImageChooserBlock(null=True, blank=True)),
+        ],
+        blank=True,
+    )
+
+    template="home/web_page.html"
+
+    content_panels = Page.content_panels + [
+        ImageChooserPanel('cover_image'),
+        FieldPanel('subtitle'),
+        StreamFieldPanel('body'),
+    ]
+
+```
+
+3. Go ahead and `makemigrations` and `migrate`.
+
+4. Now in our `web_page.html` template, we can copy some of the code from the Home Page template. We will need to load `wagtailimages_tags` at the top, though, because we have images in this model that are not in the RichTextField.
+
+> NOTE: You can use logic in Wagtail templates the same way you use them in Django templates! Remember that Wagtail uses the same templating system as Django.
+
+5. This is the code for my template (with very basic layout and styling):
+
+```
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}{% endblock extra_css %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% if page.cover_image %}
+        {% image page.cover_image fill-2000x1000 as cover_image %}
+        <div class="col-12 py-5 text-white text-center" style="background-image:url({{cover_image.url}});background-repeat:no-repeat;">
+            <div class="py-3">
+                <h2>{{page.title}}</h2>
+                <h3>{{page.subtitle}}</h3>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <div class="row my-3">
+        {% for block in page.body %}
+        <div class="col-12">
+            {% include_block block %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
+
+```
+
+6. Now `runserver`, create a new Web Page, add some content, and see what it looks like!
+
+You have just created a Wagtail website! CONGRATULATIONS! 🎉🎉🎉
+
+**Wagtail is fun to build and easy to use for editors.**
+
+Next Steps
+----------
+
+Add more pages, further customize your templates, and play around with the editor.**
